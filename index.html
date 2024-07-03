@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Code Editor</title>
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <!-- CodeMirror JS and modes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        #editor, #preview {
+            width: 50%;
+            padding: 10px;
+        }
+        textarea {
+            width: 100%;
+            height: 100%;
+            resize: none;
+            border: 1px solid #ccc;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="editor">
+        <textarea id="html" placeholder="HTML"></textarea>
+        <textarea id="css" placeholder="CSS"></textarea>
+        <textarea id="js" placeholder="JavaScript"></textarea>
+    </div>
+    <div id="preview">
+        <iframe id="output"></iframe>
+    </div>
+
+    <!-- CodeMirror initialization -->
+    <script>
+        const htmlEditor = CodeMirror.fromTextArea(document.getElementById('html'), {
+            mode: 'xml',
+            lineNumbers: true,
+            theme: 'default'
+        });
+
+        const cssEditor = CodeMirror.fromTextArea(document.getElementById('css'), {
+            mode: 'css',
+            lineNumbers: true,
+            theme: 'default'
+        });
+
+        const jsEditor = CodeMirror.fromTextArea(document.getElementById('js'), {
+            mode: 'javascript',
+            lineNumbers: true,
+            theme: 'default'
+        });
+
+        const outputFrame = document.getElementById('output');
+
+        function updatePreview() {
+            const html = htmlEditor.getValue();
+            const css = `<style>${cssEditor.getValue()}</style>`;
+            const js = `<script>${jsEditor.getValue()}<\/script>`;
+            const content = `${html}${css}${js}`;
+            outputFrame.srcdoc = content;
+        }
+
+        htmlEditor.on('change', updatePreview);
+        cssEditor.on('change', updatePreview);
+        jsEditor.on('change', updatePreview);
+    </script>
+</body>
+</html>
